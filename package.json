@@ -1,0 +1,20 @@
+{
+  "name": "fetch-response-handler",
+  "version": "1.0.1",
+  "description": "A function that wraps up the fetch API with opinionated handling of the Response Promise which effectively removes all boiler plate from making REST requests to back-end APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simonemmott/k2-tools-fetch-response-handler.git"
+  },
+  "keywords": ["fetch", "response", "handler", "idiomatic", "expressive"],
+  "author": "k2-tools <simon.emmott@yahooo.co.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/simonemmott/k2-tools-fetch-response-handler/issues"
+  },
+  "homepage": "https://github.com/simonemmott/k2-tools-fetch-response-handler#readme"
+}
