@@ -1,5 +1,20 @@
 # Fetch Response Handler
 
+## Getting Started
+
+
+```javascript
+// Import the fetchResponseHandler function from the fetch-response-handler package
+import {fetchResponseHandler} from "fetch-response-handler";
+
+// Fetch JSON payload from URL
+fetchResponseHandler(<URL>)
+  .onSuccessJson(json => {<Do something with the received JSON>})
+  .fetch();
+```
+
+## Requirement
+
 The Fetch Response Handler wraps the java script fetch API to simplify handling the Response Promise returned by java script `fetch(url, init)`.
 
 The `fetch(...)` call returns a Response Promise which significantly eases making REST requests to back end APIs.
@@ -11,9 +26,9 @@ However, back end APIs supply error details to the front end by successfully sup
 
 Idiomatically we would expect the `error(...)` method to handling error responses from the back end which it doesn't. We therefore have to inspect the resolved Response for the HTTP status code to identify whether the API call was actually successful or not. This required inspection of the resolved Response Promise reduces the expressiveness of the code and completely junks the idea of idiomatic code.
 
-## Enter the Fetch Response Handler.
+## Solution
 
-It is a javascript function which accepts the same properties as the `fetch(...)` method. i.e. `fetchResponseHanlder(url, init)`. However, instead of returning a Promise, it returns a promise-like object. i.e. an object with `then(resolved, reject)`, `error(error)`, and `finally(executor)` methods.
+The Fetch Response Handler is a javascript function which accepts the same properties as the `fetch(...)` method. i.e. `fetchResponseHanlder(url, init)`. However, instead of returning a Promise, it returns a promise-like object. i.e. an object with `then(resolved, reject)`, `error(error)`, and `finally(executor)` methods.
 Calls to these methods of the Fetch Response Handlers promise-like object simply pass the supplied `url` and `init` properties to a `fetch(...)` call and return the result off calling the `then(...)`, `error(...)`, or `finally(...)` method respectively. The `fetchResponseHandler(...)` function behaves just like the `fetch(...)` method in this respect.
 
 However, the promise-like object returned by `fetchResponseHandler(...)` offers many other methods to make calls to `fetch(...)` properly expressive and idiomatic.
