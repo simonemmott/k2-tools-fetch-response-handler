@@ -1,8 +1,4 @@
-/**
- * 
- */
- 
- const fetchResponseHandler = (url, opts = {}) => {
+ const fetchResponseHandler = (url, init = {}) => {
   // Returns an anonymous object
   // With methods then, catch, and finally like a Promise
   // the promise methods fetch the Response Promise if it has not already been fetched and
@@ -145,13 +141,10 @@
       }
     },
     handleError: (error) => {
-      console.log("Handling ERROR");
       if (handler.onNetworkErrorHandler) {
-        console.log("Local ERROR handler defined");
         handler.onNetworkErrorHandler(error);
       }
       if (defaultHandlers.onNetworkErrorHandler) {
-        console.log("Default ERROR handler defined");
         if (!handler.onNetworkErrorHandler || defaultHandlers.onNetworkErrorHandler.always) {
           defaultHandlers.onNetworkErrorHandler.handle(error);
         }
@@ -255,28 +248,44 @@
 
 const defaultHandlers = {};
 
-export const doFinally = (executor, always = false) => {
+const doFinally = (executor, always = false) => {
   defaultHandlers.doFinally = {handle: executor, always: always};
 };
-export const onError = (on, always = false) => {
+const onError = (on, always = false) => {
   defaultHandlers.onError = {handle: on, always: always};
 };
-export const onServerError = (on, always = false) => {
+
+const onServerError = (on, always = false) => {
   defaultHandlers.onServerError = {handle: on, always: always};
 };
-export const onClientError = (on, always = false) => {
+
+const onClientError = (on, always = false) => {
   defaultHandlers.onClientError = {handle: on, always: always};
 };
-export const onErrorJson = (on, always = false) => {
+
+const onErrorJson = (on, always = false) => {
   defaultHandlers.onErrorJson = {handle: on, always: always};
 };
-export const onServerErrorJson = (on, always = false) => {
+
+const onServerErrorJson = (on, always = false) => {
   defaultHandlers.onServerErrorJson = {handle: on, always: always};
 };
-export const onClientErrorJson = (on, always = false) => {
+
+const onClientErrorJson = (on, always = false) => {
   defaultHandlers.onClientErrorJson = {handle: on, always: always};
 };
-export const onNetworkError = (on, always = false) => {
+
+const onNetworkError = (on, always = false) => {
   defaultHandlers.onNetworkErrorHandler = {handle: on, always: always};
 };
-export default fetchResponseHandler;
+
+module.exports = {
+	fetchResponseHandler: fetchResponseHandler,
+	doFinally: doFinally,
+	onError: onError,
+	onServerError: onServerError,
+	onClientError: onClientError,
+	onErrorJson: onErrorJson,
+	onServerErrorJson: onServerErrorJson,
+	onClientErrorJson: onClientErrorJson,
+	onNetworkError: onNetworkError};
