@@ -167,8 +167,8 @@
       } else {
         activeController = controller;
       }
-      opts.signal = activeController.signal;
-      fetch(url, opts).then(response => {
+      init.signal = activeController.signal;
+      fetch(url, init).then(response => {
         handler.handleResponse(response);
       }).catch(error => {
         handler.handleError(error);
@@ -233,14 +233,14 @@
     },
     //Promise methods
     then: (onFulfilled, onRejected) => {
-      return fetch(url, opts).then(onFulfilled, onRejected);
+      return fetch(url, init).then(onFulfilled, onRejected);
     },
     catch: (onRejected) => {
-      return fetch(url, opts).catch(onRejected);
+      return fetch(url, init).catch(onRejected);
 
     },
     finally: (executor) => {
-      return fetch(url, opts).finally(executor);
+      return fetch(url, init).finally(executor);
     },
   };
   return handler;
