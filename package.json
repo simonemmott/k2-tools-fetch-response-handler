@@ -1,6 +1,6 @@
 {
   "name": "fetch-response-handler",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A function that wraps up the fetch API with opinionated handling of the Response Promise which effectively removes all boiler plate from making REST requests to back-end APIs",
   "main": "index.js",
   "scripts": {
