@@ -20,7 +20,7 @@ However, the promise-like object returned by `fetchResponseHandler(...)` offers 
 
 The example below shows how to use `fetchResponseHandler(...)` to fetch a JSON object from a REST API and handle successful Responses, client error Responses, server error Responses, and network failures with distinct callbacks for each type of response.
 
-```
+```javascript
 import fetchResponseHandler from "fetch-response-handler";
 
 fetchResponseHandler("http://widgets.com/api/widgets/123")
