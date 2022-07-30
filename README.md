@@ -94,10 +94,60 @@ const ViewWidget = ({id}) => {                      // (1)
 5. When the component re-renders or when the component is unloaded cancel the widget fetch if it is still in flight
 6. If the widget has been fetched include the widget in the render
 
+Now that is pretty expressive code, but in production applications we often will have HTTP headers, time outs, HTTP methods, payload data, and others to deal with.
+So in real world examples we will loose expressiveness and our code is still less than idiomatic.
 
+## Define REST API Clients To Maximise Code Reuse And Idiomacity
 
+```javascript
+const widgetApi = {                                       // (1)
+  get: (id) => {                                          // (2)
+    const url = 'http://widgets.com/api/widgets/' + id;   // (3)
+    const init = {
+      method: 'GET', 
+      headers: {...}, 
+      ...};                                               // (4)
+    return fetchResponseHandler(url, init);               // (5)
+  },
+  save: (id, widget) => {                                 // (6)
+    const url = 'http://widgets.com/api/widgets/' + id;
+    const init = {
+      method: 'GET', 
+      headers: {...}, 
+      body: JSON.stringify(widget),                       // (7)
+      ...};
+    return fetchResponseHandler(url, init);
+  }
+};
 
+const ViewWidget = ({id}) => { 
+  const [widget, setWidget] = useState(undefined);
+  
+  useEffect(() => {
+    if (id) {
+      const controller = widgetApi.get(id)                 // (8)
+        .onSuccessJson(setWidget)
+        .fetch();
+        
+      return () => controller.abort();
+    }
+  }, [id]);
+  
+  return {widget && ...};
+}
+```
 
+1. Define a REST API Client for the Widgets API
+2. Add a method to get a widget by `id`
+3. Define the GET `url` for the given `id`
+4. Define the `init` parameters for GET requests
+5. Return the Fetch Response Handler promise-like object
+6. Add a method to save a widget and/or other methods of the Widget API
+7. Add the widget to save to the body of the `init` parameters as JSON
+8. Use the widgetApi wherever you need it in your code
+
+Defining REST API Clients keeps the nasty details of production API requests away from your business logic and ensures that this nastiness only exists in one place.
+Using REST API CLients keeps your business logic clean and expressive even in complex production applications. 
 
 
 
