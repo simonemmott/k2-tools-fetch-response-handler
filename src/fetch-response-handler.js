@@ -77,7 +77,7 @@ const fetchResponseHandler = (url, init = {}) => {
         if (response.ok) {
 	      debug.log("Response OK");
           if (handler.onOkResponse) {
-	        debug.log("Handle OK Response")
+	        debug.log("Handle OK Response");
 	        handled = true;
             handler.onOkResponse(response.clone());
           }
@@ -253,7 +253,7 @@ const fetchResponseHandler = (url, init = {}) => {
       }
     },
     fetch: (controller) => {
-      let activeController = controller;
+      let activeController;
       if (controller === undefined) {
         activeController = new AbortController();
       } else {
