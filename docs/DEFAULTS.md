@@ -32,7 +32,7 @@ import and call this method once at the top of your application and all subseque
 ## Default Response Handlers
 
 | Handler Function | Properties | Description |
-| --- | --- | --- \
+| --- | --- | --- |
 | `doFinally` | `(Function (), always = false)` | Invoked after all responses |
 | `onError` | `(Function (Response), always = false)` | Invoked after all `HTTP status 4**` or `HTTP status 5**` responses |
 | `onServerError` | `(Function (Response), always = false)` | Invoked after all `HTTP status 5**` responses |
