@@ -1,9 +1,18 @@
  const fetcher = {
-	doFetch: global.fetch !== undefined ? global.fetch : (url, init) => {}
+	doFetch: (url, init) => {}
 };
+
+let withFetch = false;
+try {
+	fetcher.doFetch = fetch();
+	withFetch = true;
+} catch (e) {
+	console.log("fetch() is not defined!");
+}
 
 const mockFetch = (fetchMock) => {
 	fetcher.doFetch = fetchMock;
+	withFetch = false;
 };
 
 const debug = {
@@ -62,12 +71,7 @@ const fetchResponseHandler = (url, init = {}) => {
 
   const handler = {
     handleResponse: (response) => {
-	  let isJsonResponse = false;
-	  const contentType = response.headers.get("content-type");
-	  debug.log("Response content-type: " + contentType);
-	  if (contentType !== null && contentType.includes("application/json")) {
-		isJsonResponse = true;
-	  } 
+	  let isJsonResponse = response.headers.get("content-type")?.includes("application/json");
 	  debug.log(JSON.stringify(response));
       if (response.ok) {
 	    debug.log("Response OK");
@@ -227,15 +231,28 @@ const fetchResponseHandler = (url, init = {}) => {
       }
       init.signal = activeController.signal;
       debug.log("CAll fetch with " + url + " and " + JSON.stringify(init));
-      fetcher.doFetch(url, init).then(response => {
-	    debug.log("Response: " + JSON.stringify(response));
-        handler.handleResponse(response);
-      }).catch(error => {
-	    debug.log("Error: " + JSON.stringify(error));
-        handler.handleError(error);
-      }).finally(() => {
-        handler.handleFinally();
-      });
+      if (withFetch) {
+        fetch(url, init).then(response => {
+	      debug.log("Response: " + JSON.stringify(response));
+          handler.handleResponse(response);
+        }).catch(error => {
+	      debug.log("Error: " + JSON.stringify(error));
+          handler.handleError(error);
+        }).finally(() => {
+          handler.handleFinally();
+        });
+      } else {
+        fetcher.doFetch(url, init).then(response => {
+	      debug.log("Response: " + JSON.stringify(response));
+          handler.handleResponse(response);
+        }).catch(error => {
+	      debug.log("Error: " + JSON.stringify(error));
+          handler.handleError(error);
+        }).finally(() => {
+          handler.handleFinally();
+        });
+	
+      }
       return activeController;
     },
     onSuccess: (on) => {
