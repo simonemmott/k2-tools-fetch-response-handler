@@ -1,5 +1,7 @@
 # Fetch Response Handler
 
+https://img.shields.io/badge/dynamic/json?url=<URL>&label=<LABEL>&query=<$.DATA.SUBDATA>&color=<COLOR>&prefix=<PREFIX>&suffix=<SUFFIX>
+
 Fetch Response Handler is  wrapper for the javascript Fetch API which provides expressive and idiomatic handling of network errors, client errors `HTTP status = 4**`, server errors `HTTP status = 5**` and successful responses as either the native `Response` or as a `JSON` object for responses with `Content-Type = application/json`.
 It also provides support for default error handling and cancelling requests using `AbortControllers`.
 
@@ -44,7 +46,13 @@ fetchResponseHandler(<URL>)
 
 ## [Fetch Response Handler API](./docs/API.md)
 
+## Contributing
 
+If you'd like to contribute to this project feel free to fork the repository and use a feature branch. Pull requests are warmly welcome
+
+## Licensing
+
+The code in this project is under the MIT licence
 
 
 
