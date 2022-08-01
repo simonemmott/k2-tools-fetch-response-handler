@@ -4,17 +4,29 @@
   "description": "A function that wraps up the fetch API with opinionated handling of the Response Promise which effectively removes all boiler plate from making REST requests to back-end APIs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simonemmott/k2-tools-fetch-response-handler.git"
   },
-  "keywords": ["fetch", "response", "handler", "idiomatic", "expressive"],
-  "author": "k2-tools <simon.emmott@yahooo.co.uk>",
+  "keywords": [
+    "fetch",
+    "response",
+    "handler",
+    "idiomatic",
+    "expressive"
+  ],
+  "author": "Simon Emmott <simon.emmott@yahooo.co.uk>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/simonemmott/k2-tools-fetch-response-handler/issues"
   },
-  "homepage": "https://github.com/simonemmott/k2-tools-fetch-response-handler#readme"
+  "homepage": "https://github.com/simonemmott/k2-tools-fetch-response-handler#readme",
+  "devDependencies": {
+    "jest": "^28.1.3",
+    "jest-cli": "^28.1.3",
+    "jest-fetch-mock": "^3.0.3"
+  }
 }
