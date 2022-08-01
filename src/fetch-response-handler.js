@@ -71,142 +71,172 @@ const fetchResponseHandler = (url, init = {}) => {
 
   const handler = {
     handleResponse: (response) => {
-	  let isJsonResponse = response.headers.get("content-type")?.includes("application/json");
-	  debug.log(JSON.stringify(response));
-      if (response.ok) {
-	    debug.log("Response OK");
-        if (handler.onOkResponse) {
-	      debug.log("Handle OK Response")
-          handler.onOkResponse(response.clone());
-        }
-        if (isJsonResponse) {
-          debug.log("Response OK JSON");
-          if (handler.onOkResponseJson) {
-            debug.log("Handle OK JSON Response");
-            response.clone().json().then(handler.onOkResponseJson);
+	    let handled = false;
+	    let isJsonResponse = response.headers.get("content-type")?.includes("application/json");
+	    debug.log(JSON.stringify(response));
+        if (response.ok) {
+	      debug.log("Response OK");
+          if (handler.onOkResponse) {
+	        debug.log("Handle OK Response")
+	        handled = true;
+            handler.onOkResponse(response.clone());
           }
-        }
-      } else if (response.status >= 400 && response.status < 500) {
-	    debug.log("Response CLIENT ERROR");
-        if (handler.onClientErrorResponse) {
-	      debug.log("Handle CLIENT ERROR Response");
-          handler.onClientErrorResponse(response.clone());
-        }
-        if (defaultHandlers.onClientError) {
-          if (!handler.onClientErrorResponse || defaultHandlers.onClientError.always) {
-	        debug.log("Default Handle CLIENT ERROR");
-            defaultHandlers.onClientError.handle(response.clone());
-          }
-        }
-        if (handler.onErrorResponse) {
-	      debug.log("Handle ERROR Response (client error)");
-          handler.onErrorResponse(response.clone());
-        }
-        if (defaultHandlers.onError) {
-          if (!handler.onErrorResponse || defaultHandlers.onError.always) {
-	        debug.log("Default Handle ERROR Response (client error)");
-            defaultHandlers.onError.handle(response.clone());
-          }
-        }
-        if (isJsonResponse) {
-	      debug.log("Response JSON CLIENT ERROR");
-          if (handler.onClientErrorResponseJson) {
-	        debug.log("Handle JSON CLIENT ERROR Response");
-            response.clone().json().then(handler.onClientErrorResponseJson);
-          }
-          if (defaultHandlers.onClientErrorJson) {
-            if (!handler.onClientErrorResponseJson || defaultHandlers.onClientErrorJson.always) {
-	          debug.log("Default Handle JSON CLIENT ERROR Response");
-              response.clone().json().then(defaultHandlers.onClientErrorJson.handle);
+          if (isJsonResponse) {
+            debug.log("Response OK JSON");
+            if (handler.onOkResponseJson) {
+              debug.log("Handle OK JSON Response");
+              handled = true;
+              response.clone().json().then(handler.onOkResponseJson);
             }
           }
-          if (handler.onErrorResponseJson) {
-	        debug.log("Handle JSON ERROR Response (client error)");
-            response.clone().json().then(handler.onErrorResponseJson);
+        } else if (response.status >= 400 && response.status < 500) {
+	      debug.log("Response CLIENT ERROR");
+          if (handler.onClientErrorResponse) {
+	        debug.log("Handle CLIENT ERROR Response");
+	        handled = true;
+            handler.onClientErrorResponse(response.clone());
           }
-          if (defaultHandlers.onErrorJson) {
-            if (!handler.onErrorResponseJson || defaultHandlers.onErrorJson.always) {
-	          debug.log("Default Handle JSON ERROR Response (client error)");
-              response.clone().json().then(defaultHandlers.onErrorJson.handle);
+          if (defaultHandlers.onClientError) {
+            if (!handler.onClientErrorResponse || defaultHandlers.onClientError.always) {
+	          debug.log("Default Handle CLIENT ERROR");
+	          handled = true;
+              defaultHandlers.onClientError.handle(response.clone());
+            }
+          }
+          if (handler.onErrorResponse) {
+	        debug.log("Handle ERROR Response (client error)");
+            handler.onErrorResponse(response.clone());
+          }
+          if (defaultHandlers.onError) {
+            if (!handler.onErrorResponse || defaultHandlers.onError.always) {
+	          debug.log("Default Handle ERROR Response (client error)");
+	          handled = true;
+              defaultHandlers.onError.handle(response.clone());
+            }
+          }
+          if (isJsonResponse) {
+	        debug.log("Response JSON CLIENT ERROR");
+            if (handler.onClientErrorResponseJson) {
+	          debug.log("Handle JSON CLIENT ERROR Response");
+	          handled = true;
+              response.clone().json().then(handler.onClientErrorResponseJson);
+            }
+            if (defaultHandlers.onClientErrorJson) {
+              if (!handler.onClientErrorResponseJson || defaultHandlers.onClientErrorJson.always) {
+	            debug.log("Default Handle JSON CLIENT ERROR Response");
+	            handled = true;
+                response.clone().json().then(defaultHandlers.onClientErrorJson.handle);
+              }
+            }
+            if (handler.onErrorResponseJson) {
+	          debug.log("Handle JSON ERROR Response (client error)");
+	          handled = true;
+              response.clone().json().then(handler.onErrorResponseJson);
+            }
+            if (defaultHandlers.onErrorJson) {
+              if (!handler.onErrorResponseJson || defaultHandlers.onErrorJson.always) {
+	            debug.log("Default Handle JSON ERROR Response (client error)");
+	            handled = true;
+                response.clone().json().then(defaultHandlers.onErrorJson.handle);
+              }
+            }
+          }
+        } else if (response.status >= 500) {
+	      debug.log("Response SERVER ERROR");
+          if (handler.onServerErrorResponse) {
+	        debug.log("Handle SERVER ERROR Response");
+	        handled = true;
+            handler.onServerErrorResponse(response.clone());
+          }
+          if (defaultHandlers.onServerError) {
+            if (!handler.onServerErrorResponse || defaultHandlers.onServerError.always) {
+	          debug.log("Default Handle SERVER ERROR Response");
+	          handled = true;
+              defaultHandlers.onServerError.handle(response.clone());
+            }
+          }
+          if (handler.onErrorResponse) {
+	        debug.log("Handle ERROR Response (server error)");
+	        handled = true;
+            handler.onErrorResponse(response);
+          }
+          if (defaultHandlers.onError) {
+            if (!handler.onErrorResponse || defaultHandlers.onError.always) {
+	          debug.log("Default Handle ERROR Response (server error)");
+	          handled = true;
+              defaultHandlers.onError.handle(response.clone());
+            }
+          }
+          if (isJsonResponse) {
+	        debug.log("Response JSON SERVER ERROR");
+            if (handler.onServerErrorResponseJson) {
+	          handled = true;
+              response.json().then(handler.onServerErrorResponseJson);
+            }
+            if (defaultHandlers.onServerErrorJson) {
+              if (!handler.onServerErrorResponseJson || defaultHandlers.onServerErrorJson.always) {
+	            debug.log("Handle JSON SERVER ERROR Response");
+	            handled = true;
+                response.clone().json().then(defaultHandlers.onServerErrorJson.handle);
+              }
+            }
+            if (handler.onErrorResponseJson) {
+	          debug.log("Handle JSON SERVER ERROR Response (server error)");
+	          handled = true;
+              response.json().then(handler.onErrorResponseJson);
+            }
+            if (defaultHandlers.onErrorJson) {
+              if (!handler.onErrorResponseJson || defaultHandlers.onErrorJson.always) {
+	            debug.log("Default Handle JSON SERVER ERROR Response (server error)");
+	            handled = true;
+                response.clone().json().then(defaultHandlers.onErrorJson.handle);
+              }
             }
           }
         }
-      } else if (response.status >= 500) {
-	    debug.log("Response SERVER ERROR");
-        if (handler.onServerErrorResponse) {
-	      debug.log("Handle SERVER ERROR Response");
-          handler.onServerErrorResponse(response.clone());
-        }
-        if (defaultHandlers.onServerError) {
-          if (!handler.onServerErrorResponse || defaultHandlers.onServerError.always) {
-	        debug.log("Default Handle SERVER ERROR Response");
-            defaultHandlers.onServerError.handle(response.clone());
-          }
-        }
-        if (handler.onErrorResponse) {
-	      debug.log("Handle ERROR Response (server error)");
-          handler.onErrorResponse(response);
-        }
-        if (defaultHandlers.onError) {
-          if (!handler.onErrorResponse || defaultHandlers.onError.always) {
-	        debug.log("Default Handle ERROR Response (server error)");
-            defaultHandlers.onError.handle(response.clone());
-          }
-        }
-        if (isJsonResponse) {
-	      debug.log("Response JSON SERVER ERROR");
-          if (handler.onServerErrorResponseJson) {
-            response.json().then(handler.onServerErrorResponseJson);
-          }
-          if (defaultHandlers.onServerErrorJson) {
-            if (!handler.onServerErrorResponseJson || defaultHandlers.onServerErrorJson.always) {
-	          debug.log("Handle JSON SERVER ERROR Response");
-              response.clone().json().then(defaultHandlers.onServerErrorJson.handle);
-            }
-          }
-          if (handler.onErrorResponseJson) {
-	        debug.log("Handle JSON SERVER ERROR Response (server error)");
-            response.json().then(handler.onErrorResponseJson);
-          }
-          if (defaultHandlers.onErrorJson) {
-            if (!handler.onErrorResponseJson || defaultHandlers.onErrorJson.always) {
-	          debug.log("Default Handle JSON SERVER ERROR Response (server error)");
-              response.clone().json().then(defaultHandlers.onErrorJson.handle);
-            }
-          }
-        }
-      }
-      if (handler.onStatusResponses) {
-	    debug.log(`Response STATUS[${response.status}]`);
-        handler.onStatusResponses.forEach((statusHandler) => {
-          if (statusHandler.status === response.status) {
-	        debug.log(`Handle STATUS[${statusHandler.status}] Response`);
-            statusHandler.handler(response);
-          }
-        });
-      }
-      if (handler.onStatusResponsesJson) {
-        if (isJsonResponse) {
-	      debug.log(`Response JSON STATUS[${response.status}]`);
-          handler.onStatusResponsesJson.forEach((statusHandlerJson) => {
-            if (statusHandlerJson.status === response.status) {
-	          debug.log(`Handle JSON STATUS[${statusHandler.status}] Response`)
-              response.json().then(statusHandlerJson.handler);
+        if (handler.onStatusResponses) {
+	      debug.log(`Response STATUS[${response.status}]`);
+          handler.onStatusResponses.forEach((statusHandler) => {
+            if (statusHandler.status === response.status) {
+	          debug.log(`Handle STATUS[${statusHandler.status}] Response`);
+	          handled = true;
+              statusHandler.handler(response.clone());
             }
           });
         }
-      }
+        if (handler.onStatusResponsesJson) {
+          if (isJsonResponse) {
+	        debug.log(`Response JSON STATUS[${response.status}]`);
+	        debug.log("handler.onStatusResponsesJson: " + JSON.stringify(handler.onStatusResponsesJson));
+            handler.onStatusResponsesJson.forEach((statusHandlerJson) => {
+              if (statusHandlerJson.status === response.status) {
+	            debug.log(`Handle JSON STATUS[${statusHandlerJson.status}] Response`)
+	            handled = true;
+                response.clone().json().then(statusHandlerJson.handler);
+              }
+            });
+          }
+        }
+        if (!handled) {
+	      if (isJsonResponse) {
+		    response.json();
+	      } else {
+		    response.text();
+		  }
+        }
     },
-    handleError: (error) => {
-	  debug.log("Response ERROR");
-      if (handler.onNetworkErrorHandler) {
-	    debug.log("Handle Response ERROR");
-        handler.onNetworkErrorHandler(error);
+    handleRuntimeError: (error) => {
+	  debug.log("Runtime ERROR");
+      if (handler.onRuntimeErrorHandler) {
+	    debug.log("Handle Runtime ERROR");
+        handler.onRuntimeErrorHandler(error);
       }
-      if (defaultHandlers.onNetworkErrorHandler) {
-        if (!handler.onNetworkErrorHandler || defaultHandlers.onNetworkErrorHandler.always) {
-	      debug.log("Default Handle Response ERROR");
-          defaultHandlers.onNetworkErrorHandler.handle(error);
+      debug.log("HERE");
+      if (defaultHandlers.onRuntimeError) {
+	    debug.log("WHERE");
+        if (!handler.onRuntimeErrorHandler || defaultHandlers.onRuntimeError.always) {
+	      debug.log("Default Handle Runtime ERROR");
+          defaultHandlers.onRuntimeError.handle(error);
         }
       }
     },
@@ -237,7 +267,7 @@ const fetchResponseHandler = (url, init = {}) => {
           handler.handleResponse(response);
         }).catch(error => {
 	      debug.log("Error: " + JSON.stringify(error));
-          handler.handleError(error);
+          handler.handleRuntimeError(error);
         }).finally(() => {
           handler.handleFinally();
         });
@@ -247,7 +277,7 @@ const fetchResponseHandler = (url, init = {}) => {
           handler.handleResponse(response);
         }).catch(error => {
 	      debug.log("Error: " + JSON.stringify(error));
-          handler.handleError(error);
+          handler.handleRuntimeError(error);
         }).finally(() => {
           handler.handleFinally();
         });
@@ -301,30 +331,51 @@ const fetchResponseHandler = (url, init = {}) => {
       handler.onStatusResponsesJson.push({status: status, handler: on});
       return handler;
     },
-    onNetworkError: (on) => {
-      handler.onNetworkErrorHandler = on;
+    onRuntimeError: (on) => {
+      handler.onRuntimeErrorHandler = on;
       return handler;
     },
     doFinally: (executor) => {
       handler.finalExecutor = executor;
       return handler;
     },
-    //Promise methods
+    //Promise-like methods
     then: (onFulfilled, onRejected) => {
-      return fetch(url, init).then(onFulfilled, onRejected);
+	  if (withFetch) {
+        return fetch(url, init).then(onFulfilled, onRejected);
+      } else {
+	    return fetcher.doFetch(url, init).then(onFulfilled, onRejected);
+      }
     },
     catch: (onRejected) => {
-      return fetch(url, init).catch(onRejected);
-
+	  if (withFetch) {
+        return fetch(url, init).catch(onRejected);
+      } else {
+	    return fetcher.doFetch(url, init).catch(onRejected);
+      }
     },
     finally: (executor) => {
-      return fetch(url, init).finally(executor);
+	  if (withFetch) {
+        return fetch(url, init).finally(executor);
+      } else {
+	    return fetcher.doFetch(url, init).finally(executor);
+      }
     },
   };
   return handler;
 };
 
 const defaultHandlers = {};
+const clearDefaultHandlers = () => {
+	defaultHandlers.doFinally = undefined;
+	defaultHandlers.onError = undefined;
+	defaultHandlers.onServerError = undefined;
+	defaultHandlers.onClientError = undefined;
+	defaultHandlers.onErrorJson = undefined;
+	defaultHandlers.onServerErrorJson = undefined;
+	defaultHandlers.onClientErrorJson = undefined;
+	defaultHandlers.onRuntimeError = undefined;
+}
 
 const doFinally = (executor, always = false) => {
   defaultHandlers.doFinally = {handle: executor, always: always};
@@ -353,8 +404,8 @@ const onClientErrorJson = (on, always = false) => {
   defaultHandlers.onClientErrorJson = {handle: on, always: always};
 };
 
-const onNetworkError = (on, always = false) => {
-  defaultHandlers.onNetworkErrorHandler = {handle: on, always: always};
+const onRuntimeError = (on, always = false) => {
+  defaultHandlers.onRuntimeError = {handle: on, always: always};
 };
 
 module.exports = {
@@ -366,6 +417,7 @@ module.exports = {
 	onErrorJson: onErrorJson,
 	onServerErrorJson: onServerErrorJson,
 	onClientErrorJson: onClientErrorJson,
-	onNetworkError: onNetworkError,
+	onRuntimeError: onRuntimeError,
+	clearDefaultHandlers: clearDefaultHandlers,
 	mockFetch: mockFetch,
 	debug: debug};
