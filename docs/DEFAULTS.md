@@ -40,7 +40,7 @@ import and call this method once at the top of your application and all subseque
 | `onErrorJson` | `(Function (JSON payload), always = false)` | Invoked after all `HTTP status 4**` or `HTTP status 5**` responses with `Content-Type = application/json` |
 | `onServerErrorJson` | `(Function (JSON payload), always = false)` | Invoked after all `HTTP status 5**` responses with `Content-Type = application/json` |
 | `onClientErrorJson` | `(Function (JSON payload), always = false)` | Invoked after all `HTTP status 4**` responses with `Content-Type = application/json` |
-| `onNetworkError` | `(Function (Error), always = false)` | Invoked after all network error responses |
+| `onRuntimeError` | `(Function (Error), always = false)` | Invoked after all runtime errors |
 
 Default handlers can be set for all, any, or none of the response types, and all default handers can be defined to always execute.
 
