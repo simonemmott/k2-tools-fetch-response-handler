@@ -72,7 +72,7 @@ const fetchResponseHandler = (url, init = {}) => {
   const handler = {
     handleResponse: (response) => {
 	    let handled = false;
-	    let isJsonResponse = response.headers.get("content-type")?.includes("application/json");
+	    const isJsonResponse = response.headers.get("content-type")?.includes("application/json");
 	    debug.log(JSON.stringify(response));
         if (response.ok) {
 	      debug.log("Response OK");
@@ -210,7 +210,7 @@ const fetchResponseHandler = (url, init = {}) => {
 	        debug.log("handler.onStatusResponsesJson: " + JSON.stringify(handler.onStatusResponsesJson));
             handler.onStatusResponsesJson.forEach((statusHandlerJson) => {
               if (statusHandlerJson.status === response.status) {
-	            debug.log(`Handle JSON STATUS[${statusHandlerJson.status}] Response`)
+	            debug.log(`Handle JSON STATUS[${statusHandlerJson.status}] Response`);
 	            handled = true;
                 response.clone().json().then(statusHandlerJson.handler);
               }
@@ -375,7 +375,7 @@ const clearDefaultHandlers = () => {
 	defaultHandlers.onServerErrorJson = undefined;
 	defaultHandlers.onClientErrorJson = undefined;
 	defaultHandlers.onRuntimeError = undefined;
-}
+};
 
 const doFinally = (executor, always = false) => {
   defaultHandlers.doFinally = {handle: executor, always: always};
