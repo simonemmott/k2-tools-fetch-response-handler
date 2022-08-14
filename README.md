@@ -1,3 +1,6 @@
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/simonemmott/k2-tools-fetch-response-handler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/simonemmott/k2-tools-fetch-response-handler/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/simonemmott/k2-tools-fetch-response-handler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/simonemmott/k2-tools-fetch-response-handler/context:javascript)
+
 # Fetch Response Handler
 
 Fetch Response Handler is  wrapper for the javascript Fetch API which provides expressive and idiomatic handling of network errors, client errors `HTTP status = 4**`, server errors `HTTP status = 5**` and successful responses as either the native `Response` or as a `JSON` object for responses with `Content-Type = application/json`.

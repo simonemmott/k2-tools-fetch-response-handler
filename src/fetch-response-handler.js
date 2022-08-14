@@ -365,7 +365,14 @@ const fetchResponseHandler = (url, init = {}) => {
   return handler;
 };
 
+/**
+ * A constant to hold default handlers if they are defined
+*/
 const defaultHandlers = {};
+
+/**
+ * A function to clear all default handlers
+ */
 const clearDefaultHandlers = () => {
 	defaultHandlers.doFinally = undefined;
 	defaultHandlers.onError = undefined;
