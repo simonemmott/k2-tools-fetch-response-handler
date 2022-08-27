@@ -2,13 +2,15 @@
 	doFetch: (url, init) => {}
 };
 
-let withFetch = false;
+let withFetch = true;
+/*
 try {
 	fetcher.doFetch = fetch();
 	withFetch = true;
 } catch (e) {
 	console.log("fetch() is not defined!");
 }
+*/
 
 const mockFetch = (fetchMock) => {
 	fetcher.doFetch = fetchMock;
