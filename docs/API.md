@@ -37,7 +37,8 @@ The `promise-like` object returned by the Fetch Response Handler has the followi
 | `onErrorJson` | `Function(JSON object)` | `handler` | Define a handler for the JSON payload to respond to all responses with `HTTP status = 4** or 5**` and a `Content-Type = "application/json` and return the `promise-like` object for further configuration before fetch |
 | `onStatus` | `HTTP status code, Function(Response)` | `handler` | Add a handler to respond to responses with the given HTTP status code and and return the `promise-like` object for further configuration before fetch. Multiple handlers can be added for the same status code and they will execute in the order in which they were defined. |
 | `onStatusJson` | `HTTP status code, Function(JSON object)` | `handler` | Add a handler to respond to responses with the given HTTP status code and a `Content-Type = "application/json` and return the `promise-like` object for further configuration before fetch. Multiple handlers can be added for the same status code and they will execute in the order in which they were defined. |
-| `onNetworkError` | `Function(Error)` | `handler` | Define a handler for the Error object thrown by network errors and return the `promise-like` object for further configuration before fetch |
+| `onRuntimeError` | `Function(Error)` | `handler` | Define a handler for the Error object thrown by network errors and return the `promise-like` object for further configuration before fetch |
+| `onAbortr` | `Function(Error)` | `handler` | Define a handler for the Error object thrown when the request is aborted and return the `promise-like` object for further configuration before fetch |
 | `doFinally` | `Function()` | `handler` | Add an executor to be invoked after the response is returned |
 
 ### Promise Like Methods
