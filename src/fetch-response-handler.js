@@ -229,16 +229,23 @@ const fetchResponseHandler = (url, init = {}) => {
     },
     handleRuntimeError: (error) => {
 	  debug.log("Runtime ERROR");
-      if (handler.onRuntimeErrorHandler) {
-	    debug.log("Handle Runtime ERROR");
-        handler.onRuntimeErrorHandler(error);
-      }
-      debug.log("HERE");
-      if (defaultHandlers.onRuntimeError) {
-	    debug.log("WHERE");
-        if (!handler.onRuntimeErrorHandler || defaultHandlers.onRuntimeError.always) {
-	      debug.log("Default Handle Runtime ERROR");
-          defaultHandlers.onRuntimeError.handle(error);
+	    if (error.name === "AbortError") {
+        debug.log("Abort ERROR");
+        if (handler.onAbortHandler) {
+          handler.onAbortHandler(error);
+        }
+      } else {
+        if (handler.onRuntimeErrorHandler) {
+  	    debug.log("Handle Runtime ERROR");
+          handler.onRuntimeErrorHandler(error);
+        }
+        debug.log("HERE");
+        if (defaultHandlers.onRuntimeError) {
+  	    debug.log("WHERE");
+          if (!handler.onRuntimeErrorHandler || defaultHandlers.onRuntimeError.always) {
+  	      debug.log("Default Handle Runtime ERROR");
+            defaultHandlers.onRuntimeError.handle(error);
+          }
         }
       }
     },
@@ -335,6 +342,10 @@ const fetchResponseHandler = (url, init = {}) => {
     },
     onRuntimeError: (on) => {
       handler.onRuntimeErrorHandler = on;
+      return handler;
+    },
+    onAbort: (on) => {
+      handler.onAbortHandler = on;
       return handler;
     },
     doFinally: (executor) => {
